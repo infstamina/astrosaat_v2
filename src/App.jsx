@@ -38,42 +38,31 @@ function App() {
 
   return (
     <div style={{
-      minHeight: '160vh',
-      width: '100vw',
-      background: "url('/icon/AstroSaatIcon2.png') center center no-repeat",
-        backgroundSize: 'cover',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '16px',
-        boxSizing: 'border-box'
+      background: "url('/icon/AstroSaatIcon3.png')",
+      width: '80vw',
+      height: '120vh',
     }}>
-      <h1>Hoşgeldiniz!</h1>
+      <h2><br />Gezegen Kaç?<br /><br /><br /><br /><br /><br /></h2>
       <div className="card">
-        {/* Tarih seçimi kaldırıldı, NextPage'de olacak */}
-        <button onClick={getLocation}>
-          Gezegen kaç?
-        </button>
+              <p className="read-the-docs">Enlem-boylam hesaplaması yapmak üzere <br />güncel konumunuz alınacak ancak <br />kayıt edilmeyecektir.</p>
         {location && (
           <div style={{ marginTop: '1em' }}>
-            <strong>Konumunuz:</strong><br />
-            Enlem: {location.latitude} <br />
-            Boylam: {location.longitude}
-            <div style={{ marginTop: '1em', display: 'flex', gap: 12 }}>
-              <button onClick={() => navigate('/today', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#ffd700'}}>Bugün</button>
-              <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#eee'}}>Liste</button>
-            </div>
+              <button onClick={() => navigate('/today', { state: { locationInfo: location } })} style={{ background:'#ffd700'}}>Bugün</button>
+              <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{ background:'#eee'}}>Liste</button>
+            
           </div>
+        )}
+        {!location && (
+          <div style={{ marginTop: '1em' }}>
+        <button onClick={getLocation}>
+          Konum Al
+        </button>
+        </div>
         )}
         {error && (
           <div style={{ color: 'red', marginTop: '1em' }}>{error}</div>
         )}
       </div>
-      <p className="read-the-docs">
-        Enlem-boylam hesaplaması yapmak üzere güncel konumunuz alınacak ancak kayıt edilmeyecektir.
-      </p>
     </div>
   )
 }
