@@ -2,6 +2,7 @@ import SunCalc from 'suncalc';
 import { useLocation } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import './Today.css';
+import { planetSuggestions } from "./planetSuggestions";
 
 export default function Today() {
   const [selectedPlanetIdx, setSelectedPlanetIdx] = useState(null);
@@ -232,14 +233,32 @@ export default function Today() {
             Öneri
           </div>
           <div style={{fontSize:'0.98rem', textAlign:'center'}}>
-            {/* Burada gezegene göre öneri metni dinamikleştirilebilir */}
-            {allPlanetHours[activePlanetIdx].planet === 'Mars' && 'Enerjini harekete dönüştür, yeni bir işe başlamak için cesur ol!'}
-            {allPlanetHours[activePlanetIdx].planet === 'Venüs' && 'Sevdiklerinle vakit geçir, güzellikleri fark et ve kendine değer ver.'}
-            {allPlanetHours[activePlanetIdx].planet === 'Güneş' && 'Kendini ifade et, liderlik et ve yaratıcılığını ortaya koy.'}
-            {allPlanetHours[activePlanetIdx].planet === 'Jüpiter' && 'Yeni şeyler öğren, fırsatları değerlendir ve iyimser ol.'}
-            {allPlanetHours[activePlanetIdx].planet === 'Satürn' && 'Sorumluluklarını yerine getir, sabırlı ol ve plan yap.'}
-            {allPlanetHours[activePlanetIdx].planet === 'Merkür' && 'İletişim kur, yaz, oku ve zihnini çalıştır.'}
-            {allPlanetHours[activePlanetIdx].planet === 'Ay' && 'Duygularına kulak ver, iç dünyana dön ve sevdiklerine yakın ol.'}
+            {/* Dinamik gezegen önerisi */}
+            {
+              (() => {
+                const planetMap = {
+                  'Satürn': 'saturn',
+                  'Jüpiter': 'jupiter',
+                  'Mars': 'mars',
+                  'Güneş': 'sun',
+                  'Venüs': 'venus',
+                  'Merkür': 'mercury',
+                  'Ay': 'moon',
+                };
+                const planetKey = planetMap[allPlanetHours[activePlanetIdx].planet];
+                const type = allPlanetHours[activePlanetIdx].type; // 'day' veya 'night'
+                const suggestions = planetSuggestions[planetKey];
+                let pool = [];
+                if (type === 'day') {
+                  pool = [...(suggestions.day || []), ...(suggestions.both || [])];
+                } else if (type === 'night') {
+                  pool = [...(suggestions.night || []), ...(suggestions.both || [])];
+                }
+                if (pool.length === 0) return 'Öneri bulunamadı.';
+                const randomIdx = Math.floor(Math.random() * pool.length);
+                return pool[randomIdx];
+              })()
+            }
           </div>
         </div>
         </>
