@@ -115,32 +115,26 @@ export default function Today() {
       <div style={{textAlign:'center', marginBottom:18}}>
         <span style={{fontWeight:'bold'}}>Konum:</span> {lat && lng ? `Enlem: ${lat}  Boylam: ${lng}` : 'Konum bilgisi bulunamadı.'}
       </div>
-      {/* Gündüz Saatleri */}
+      {/* Gündüz + Gece Saatleri Scrollable */}
       <div style={{margin:'32px 0'}}>
-        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#1a237e'}}>Gündüz Saatleri</div>
-        <div style={{color:'#666', fontSize:'0.98rem', marginBottom: 8}}>Aralık: {formatTime(sunrise)} - {formatTime(sunset)}<br /><em>Fark:</em> {formatDuration(dayDuration)}</div>
+        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#1a237e'}}>Gündüz & Gece Gezegen Saatleri</div>
+        <div style={{color:'#666', fontSize:'0.98rem', marginBottom: 8}}>
+          Gündüz: {formatTime(sunrise)} - {formatTime(sunset)} &nbsp; <em>Fark:</em> {formatDuration(dayDuration)} &nbsp; Gezegen Süresi: {formatDuration(dayDuration / 12)}<br />
+          Gece: {formatTime(sunset)} - {formatTime(nextSunrise)} &nbsp; <em>Fark:</em> {formatDuration(nightDuration)} &nbsp; Gezegen Süresi: {formatDuration(nightDuration / 12)}
+        </div>
         <div className="planet-cards">
           {dayPlanetHours.map((d, i) => (
             <div className="planet-card planet-day" key={i} style={{'--card-bg': '#f7faff', '--card-fg': d.color}}>
               <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
               <div className="planet-label">{d.planet}</div>
-              <div className="planet-time">{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</div>
-              <div className="planet-duration">Süre: {formatDuration((d.end-d.start)/1000)}</div>
+              <div className="planet-time">{i+1}. {formatTime(d.start)} - {formatTime(d.end)}</div>
             </div>
           ))}
-        </div>
-      </div>
-      {/* Gece Saatleri */}
-      <div style={{margin:'32px 0'}}>
-        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#fffde7', textShadow:'0 1px 6px #23243a'}}>Gece Saatleri</div>
-        <div style={{color:'#bbb', fontSize:'0.98rem', marginBottom: 8}}>Aralık: {formatTime(sunset)} - {formatTime(nextSunrise)}<br /><em>Fark:</em> {formatDuration(nightDuration)}</div>
-        <div className="planet-cards">
           {nightPlanetHours.map((d, i) => (
-            <div className="planet-card planet-night" key={i} style={{'--card-bg': '#23243a', '--card-fg': d.color}}>
+            <div className="planet-card planet-night" key={i+12} style={{'--card-bg': '#23243a', '--card-fg': d.color}}>
               <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
               <div className="planet-label">{d.planet}</div>
-              <div className="planet-time">{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</div>
-              <div className="planet-duration">Süre: {formatDuration((d.end-d.start)/1000)}</div>
+              <div className="planet-time">{i+13}. {formatTime(d.start)} - {formatTime(d.end)}</div>
             </div>
           ))}
         </div>

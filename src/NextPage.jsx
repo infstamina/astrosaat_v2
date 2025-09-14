@@ -142,7 +142,7 @@ export default function NextPage() {
         <strong>Gündüz Gezegen Saatleri:</strong>
         <ol>
           {dayPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
+            <li key={i}> {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
           ))}
         </ol>
         <strong>Gece Gezegen Saatleri:</strong>
