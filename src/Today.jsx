@@ -1,9 +1,10 @@
 import SunCalc from 'suncalc';
 import { useLocation } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Today.css';
 
 export default function Today() {
+  const [selectedPlanetIdx, setSelectedPlanetIdx] = useState(null);
   const planetCardsRef = useRef([]);
   const locationRouter = useLocation();
   const locationInfo = locationRouter.state?.locationInfo;
@@ -112,20 +113,22 @@ export default function Today() {
   const currentPlanetIdx = allPlanetHours.findIndex(
     (d) => now >= d.start && now < d.end
   );
+  // Seçili gezegen indexi: tıklanmadıysa anlık gezegen, tıklandıysa seçili
+  const activePlanetIdx = selectedPlanetIdx !== null ? selectedPlanetIdx : currentPlanetIdx;
 
   // Scroll ve işaretleme için effect
   useEffect(() => {
-    if (currentPlanetIdx !== -1 && planetCardsRef.current[currentPlanetIdx]) {
-      planetCardsRef.current[currentPlanetIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    if (activePlanetIdx !== -1 && planetCardsRef.current[activePlanetIdx]) {
+      planetCardsRef.current[activePlanetIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
     }
-  }, [currentPlanetIdx]);
+  }, [activePlanetIdx]);
   function formatTime(date) {
     if (!date) return '-';
     return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 
   return (
-    <div style={{ padding: '24px 4vw', maxWidth: 1100, margin: '0 auto' }}>
+  <div style={{ padding: '24px 4vw', maxWidth: 1100, margin: '0 auto' }}>
       <h2 style={{textAlign:'center', fontSize:'2.1rem', marginBottom:8, letterSpacing:1}}>Bugünün Gezegen Saatleri</h2>
       <div style={{textAlign:'center', color:'#888', marginBottom:18}}>
         <span style={{fontWeight:'bold'}}>Tarih:</span> {dateStr} &nbsp; <span style={{fontWeight:'bold'}}>Saat:</span> {timeStr}
@@ -143,10 +146,11 @@ export default function Today() {
         <div className="planet-cards">
           {allPlanetHours.map((d, i) => (
             <div
-              className={`planet-card planet-${d.type}${i === currentPlanetIdx ? ' planet-current' : ''}`}
+              className={`planet-card planet-${d.type}${i === activePlanetIdx ? ' planet-current' : ''}`}
               key={i}
               ref={el => planetCardsRef.current[i] = el}
               style={{'--card-bg': d.type === 'day' ? '#f7faff' : '#23243a', '--card-fg': d.color}}
+              onClick={() => setSelectedPlanetIdx(i)}
             >
               <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
               <div className="planet-label">{d.planet}</div>
@@ -155,6 +159,32 @@ export default function Today() {
           ))}
         </div>
       </div>
+      {/* Seçili gezegenin tema bilgileri kartı */}
+      {activePlanetIdx !== -1 && (
+        <div className="planet-theme-card" style={{
+          margin: '0 auto',
+          marginTop: 24,
+          maxWidth: 340,
+          background: allPlanetHours[activePlanetIdx].type === 'day' ? '#fffde7' : '#23243a',
+          color: allPlanetHours[activePlanetIdx].type === 'day' ? '#1a237e' : '#ffd600',
+          borderRadius: 18,
+          boxShadow: '0 2px 12px 0 rgba(0,0,0,0.10)',
+          padding: '22px 28px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          border: '2px solid #ff9800',
+        }}>
+          <div style={{fontSize:'2.5rem', marginBottom:8}}>{allPlanetHours[activePlanetIdx].icon}</div>
+          <div style={{fontWeight:'bold', fontSize:'1.25rem', marginBottom:4}}>{allPlanetHours[activePlanetIdx].planet}</div>
+          <div style={{fontSize:'1.05rem', marginBottom:6}}>
+            Tema: <span style={{fontWeight:'bold', color: allPlanetHours[activePlanetIdx].color}}>{allPlanetHours[activePlanetIdx].type === 'day' ? 'Gündüz Teması' : 'Gece Teması'}</span>
+          </div>
+          <div style={{fontSize:'0.98rem', color:'#888'}}>
+            Saat Aralığı: {formatTime(allPlanetHours[activePlanetIdx].start)} - {formatTime(allPlanetHours[activePlanetIdx].end)}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
