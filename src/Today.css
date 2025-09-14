@@ -1,3 +1,8 @@
+.planet-current {
+  border-color: #ff9800 !important;
+  box-shadow: 0 0 0 4px #ffe0b2, 0 6px 24px 0 rgba(0,0,0,0.16);
+  z-index: 2;
+}
 .planet-cards {
   display: flex;
   flex-wrap: nowrap;

@@ -1,8 +1,10 @@
 import SunCalc from 'suncalc';
 import { useLocation } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 import './Today.css';
 
 export default function Today() {
+  const planetCardsRef = useRef([]);
   const locationRouter = useLocation();
   const locationInfo = locationRouter.state?.locationInfo;
 
@@ -79,7 +81,8 @@ export default function Today() {
         end: new Date(end),
         planet: planetData[planetIdx].name,
         icon: planetData[planetIdx].icon,
-        color: planetData[planetIdx].color
+        color: planetData[planetIdx].color,
+        type: 'day',
       });
       start = end;
     }
@@ -96,11 +99,26 @@ export default function Today() {
         end: new Date(end),
         planet: planetData[planetIdx].name,
         icon: planetData[planetIdx].icon,
-        color: planetData[planetIdx].color
+        color: planetData[planetIdx].color,
+        type: 'night',
       });
       start = end;
     }
   }
+
+  // Şu anki gezegen aralığını bul
+  const now = today;
+  const allPlanetHours = [...dayPlanetHours, ...nightPlanetHours];
+  const currentPlanetIdx = allPlanetHours.findIndex(
+    (d) => now >= d.start && now < d.end
+  );
+
+  // Scroll ve işaretleme için effect
+  useEffect(() => {
+    if (currentPlanetIdx !== -1 && planetCardsRef.current[currentPlanetIdx]) {
+      planetCardsRef.current[currentPlanetIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
+  }, [currentPlanetIdx]);
   function formatTime(date) {
     if (!date) return '-';
     return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -123,18 +141,16 @@ export default function Today() {
           Gece: {formatTime(sunset)} - {formatTime(nextSunrise)} &nbsp; <em>Fark:</em> {formatDuration(nightDuration)} &nbsp; Gezegen Süresi: {formatDuration(nightDuration / 12)}
         </div>
         <div className="planet-cards">
-          {dayPlanetHours.map((d, i) => (
-            <div className="planet-card planet-day" key={i} style={{'--card-bg': '#f7faff', '--card-fg': d.color}}>
+          {allPlanetHours.map((d, i) => (
+            <div
+              className={`planet-card planet-${d.type}${i === currentPlanetIdx ? ' planet-current' : ''}`}
+              key={i}
+              ref={el => planetCardsRef.current[i] = el}
+              style={{'--card-bg': d.type === 'day' ? '#f7faff' : '#23243a', '--card-fg': d.color}}
+            >
               <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
               <div className="planet-label">{d.planet}</div>
               <div className="planet-time">{i+1}. {formatTime(d.start)} - {formatTime(d.end)}</div>
-            </div>
-          ))}
-          {nightPlanetHours.map((d, i) => (
-            <div className="planet-card planet-night" key={i+12} style={{'--card-bg': '#23243a', '--card-fg': d.color}}>
-              <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
-              <div className="planet-label">{d.planet}</div>
-              <div className="planet-time">{i+13}. {formatTime(d.start)} - {formatTime(d.end)}</div>
             </div>
           ))}
         </div>
