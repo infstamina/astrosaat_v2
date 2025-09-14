@@ -113,7 +113,6 @@ export default function NextPage() {
 
   return (
     <div style={{ padding: 32 }}>
-  <h2>Sonraki Sayfa</h2>
   <div style={{ marginBottom: 16 }}>
         <label htmlFor="date-input"><strong>Tarih seçin:</strong> </label>
         <input

@@ -37,20 +37,24 @@ function App() {
 
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
+    <div style={{
+      minHeight: '160vh',
+      width: '100vw',
+      background: "url('/icon/AstroSaatIcon2.png') center center no-repeat",
+        backgroundSize: 'cover',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '16px',
+        boxSizing: 'border-box'
+    }}>
       <h1>Hoşgeldiniz!</h1>
       <div className="card">
         {/* Tarih seçimi kaldırıldı, NextPage'de olacak */}
         <button onClick={getLocation}>
-          Konumumu Al
+          Gezegen kaç?
         </button>
         {location && (
           <div style={{ marginTop: '1em' }}>
@@ -58,8 +62,8 @@ function App() {
             Enlem: {location.latitude} <br />
             Boylam: {location.longitude}
             <div style={{ marginTop: '1em', display: 'flex', gap: 12 }}>
-              <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#eee'}}>Liste</button>
               <button onClick={() => navigate('/today', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#ffd700'}}>Bugün</button>
+              <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#eee'}}>Liste</button>
             </div>
           </div>
         )}
@@ -68,9 +72,9 @@ function App() {
         )}
       </div>
       <p className="read-the-docs">
-        Konumunuzu almak için butona tıklayın.
+        Enlem-boylam hesaplaması yapmak üzere güncel konumunuz alınacak ancak kayıt edilmeyecektir.
       </p>
-    </>
+    </div>
   )
 }
 
