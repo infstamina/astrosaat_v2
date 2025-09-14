@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import NextPage from './NextPage'
+import { useNavigate } from 'react-router-dom';
+import NextPage from './NextPage';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,11 +8,10 @@ import './App.css'
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
-  // Sadece otomatik konum kullanılacak
-  const [goNext, setGoNext] = useState(false);
+  const navigate = useNavigate();
 
   // Manuel ilçe seçimi kaldırıldı
 
@@ -34,49 +34,36 @@ function App() {
     );
   };
 
-  // Konum veya manuel seçim tamamlandığında otomatik geçiş
-  useEffect(() => {
-    if (location) {
-      const timer = setTimeout(() => setGoNext(true), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [location]);
 
-  if (goNext) {
-    // Sadece otomatik konum ile ilerle
-    return <NextPage locationInfo={location} />;
-  }
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Hoşgeldiniz!</h1>
+    <div style={{
+      background: "url('/icon/AstroSaatIcon3.png')",
+      width: '80vw',
+      height: '120vh',
+    }}>
+      <h2><br />Gezegen Kaç?<br /><br /><br /><br /><br /><br /></h2>
       <div className="card">
-        <button onClick={getLocation}>
-          Konumumu Al
-        </button>
+              <p className="read-the-docs">Enlem-boylam hesaplaması yapmak üzere <br />güncel konumunuz alınacak ancak <br />kayıt edilmeyecektir.</p>
         {location && (
           <div style={{ marginTop: '1em' }}>
-            <strong>Konumunuz:</strong><br />
-            Enlem: {location.latitude} <br />
-            Boylam: {location.longitude}
+              <button onClick={() => navigate('/today', { state: { locationInfo: location } })} style={{ background:'#ffd700'}}>Bugün</button>
+              <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{ background:'#eee'}}>Liste</button>
+            
           </div>
+        )}
+        {!location && (
+          <div style={{ marginTop: '1em' }}>
+        <button onClick={getLocation}>
+          Konum Al
+        </button>
+        </div>
         )}
         {error && (
           <div style={{ color: 'red', marginTop: '1em' }}>{error}</div>
         )}
       </div>
-      <p className="read-the-docs">
-        Konumunuzu almak için butona tıklayın.
-      </p>
-    </>
+    </div>
   )
 }
 

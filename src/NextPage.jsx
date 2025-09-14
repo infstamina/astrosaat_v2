@@ -1,9 +1,24 @@
 import SunCalc from 'suncalc';
 
-export default function NextPage({ locationInfo }) {
-  const now = new Date();
-  const dateStr = now.toLocaleDateString();
-  const timeStr = now.toLocaleTimeString();
+
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+export default function NextPage() {
+  const navigate = useNavigate();
+  const locationRouter = useLocation();
+  const locationInfo = locationRouter.state?.locationInfo;
+
+  // Tarih seçimi burada yönetilecek
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
+  const [selectedDate, setSelectedDate] = useState(todayStr);
+  const dateObj = selectedDate ? new Date(selectedDate + 'T12:00:00') : today;
+  const dateStr = dateObj.toLocaleDateString('tr-TR');
+  // Eğer seçili tarih bugünün tarihi ise gerçek saat göster, değilse 12:00:00 göster
+  const timeStr = (selectedDate === todayStr)
+    ? today.toLocaleTimeString('tr-TR')
+    : dateObj.toLocaleTimeString('tr-TR');
 
   // Konum bilgisi
   let lat = null, lng = null;
@@ -15,12 +30,12 @@ export default function NextPage({ locationInfo }) {
   let sunrise = null, sunset = null, nextSunrise = null, nextSunset = null;
   let dayDuration = null, nightDuration = null;
   if (lat && lng) {
-    const todayTimes = SunCalc.getTimes(now, lat, lng);
+    const todayTimes = SunCalc.getTimes(dateObj, lat, lng);
     sunrise = todayTimes.sunrise;
     sunset = todayTimes.sunset;
     // Ertesi gün için
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
+    const tomorrow = new Date(dateObj);
+    tomorrow.setDate(dateObj.getDate() + 1);
     const tomorrowTimes = SunCalc.getTimes(tomorrow, lat, lng);
     nextSunrise = tomorrowTimes.sunrise;
     nextSunset = tomorrowTimes.sunset;
@@ -41,16 +56,36 @@ export default function NextPage({ locationInfo }) {
     return `${h} saat ${m} dk ${s} sn`;
   }
 
-  // Gezegen saatleri için gündüz ve gece sürelerini 12'ye böl ve saat aralıklarını hesapla
+  // Gezegen isimleri ve sırası (geleneksel haftalık sıra)
+  const planetNames = [
+    'Satürn', // 0
+    'Jüpiter', // 1
+    'Mars',    // 2
+    'Güneş',   // 3
+    'Venüs',   // 4
+    'Merkür',  // 5
+    'Ay'       // 6
+  ];
+
+  // Haftanın günü -> gündüz/gece ilk gezegeni (Pazar:0, Pazartesi:1, ...)
+  // Pazar: Güneş, Pazartesi: Ay, Salı: Mars, Çarşamba: Merkür, Perşembe: Jüpiter, Cuma: Venüs, Cumartesi: Satürn
+  const weekdayFirstPlanetIdx = [3, 6, 2, 5, 1, 4, 0];
+  const weekday = dateObj.getDay();
+  const firstPlanetIdx = weekdayFirstPlanetIdx[weekday];
+
+  // Gezegen saatleri için gündüz ve gece sürelerini 12'ye böl ve saat aralıklarını hesapla, gezegen isimlerini sırala
   let dayPlanetHours = [], nightPlanetHours = [];
   if (dayDuration && sunrise && sunset) {
     const part = dayDuration / 12;
     let start = new Date(sunrise);
     for (let i = 0; i < 12; i++) {
       let end = new Date(start.getTime() + part * 1000);
+      // Gündüz saatleri için gezegen sırası: ilk gezegen + i
+      const planetIdx = (firstPlanetIdx + i) % 7;
       dayPlanetHours.push({
         start: new Date(start),
-        end: new Date(end)
+        end: new Date(end),
+        planet: planetNames[planetIdx]
       });
       start = end;
     }
@@ -60,9 +95,12 @@ export default function NextPage({ locationInfo }) {
     let start = new Date(sunset);
     for (let i = 0; i < 12; i++) {
       let end = new Date(start.getTime() + part * 1000);
+      // Gece saatleri için gezegen sırası: ilk gezegen + 12 + i
+      const planetIdx = (firstPlanetIdx + 12 + i) % 7;
       nightPlanetHours.push({
         start: new Date(start),
-        end: new Date(end)
+        end: new Date(end),
+        planet: planetNames[planetIdx]
       });
       start = end;
     }
@@ -75,11 +113,7 @@ export default function NextPage({ locationInfo }) {
 
   return (
     <div style={{ padding: 32 }}>
-      <h2>Sonraki Sayfa</h2>
-      <div style={{ marginBottom: 16 }}>
-        <strong>Tarih:</strong> {dateStr} <br />
-        <strong>Saat:</strong> {timeStr}
-      </div>
+      
       <div>
         <strong>Konum Bilgisi:</strong><br />
         {lat && lng ? (
@@ -91,21 +125,32 @@ export default function NextPage({ locationInfo }) {
           <span>Konum bilgisi bulunamadı.</span>
         )}
       </div>
+  <div style={{ marginBottom: 16, marginTop: 16 }}>
+        <label htmlFor="date-input"><strong>Tarih seçin:</strong> </label>
+        <input
+          id="date-input"
+          type="date"
+          value={selectedDate}
+          onChange={e => setSelectedDate(e.target.value)}
+        />
+      </div>
       <div style={{ marginTop: 24 }}>
         <strong>Gündüz Saat Aralığı:</strong> {formatTime(sunrise)} - {formatTime(sunset)}<br />
-        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(dayDuration)}</span><br />
+        <span style={{marginLeft:16,}}><em>Fark:</em> {formatDuration(dayDuration)}</span><br />
+        <span style={{marginLeft:16,}}><em>Süre:</em> {formatDuration(dayDuration / 12)}</span><br />
         <strong>Gece Saat Aralığı:</strong> {formatTime(sunset)} - {formatTime(nextSunrise)}<br />
-        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(nightDuration)}</span><br /><br />
+        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(nightDuration)}</span><br />
+        <span style={{marginLeft:16,}}><em>Süre:</em> {formatDuration(nightDuration / 12)}</span><br /><br />
         <strong>Gündüz Gezegen Saatleri:</strong>
         <ol>
           {dayPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</li>
+            <li key={i} align="left"> {formatTime(d.start)} - {formatTime(d.end)} <b>{d.planet}</b></li>
           ))}
         </ol>
         <strong>Gece Gezegen Saatleri:</strong>
         <ol>
           {nightPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</li>
+            <li key={i} align="left"> {formatTime(d.start)} - {formatTime(d.end)} <b>{d.planet}</b></li>
           ))}
         </ol>
       </div>
