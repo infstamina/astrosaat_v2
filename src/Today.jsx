@@ -192,7 +192,7 @@ export default function Today() {
               className={`planet-card planet-${d.type}${i === activePlanetIdx ? ' planet-current' : ''}`}
               key={i}
               ref={el => planetCardsRef.current[i] = el}
-              style={{'--card-bg': d.type === 'day' ? '#f7faff' : '#23243a', '--card-fg': d.color}}
+              style={{'--card-bg': d.type === 'day' ? '#fbfce5ff' : '#020875ff', '--card-fg': d.color}}
               onClick={() => setSelectedPlanetIdx(i)}
             >
               <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
