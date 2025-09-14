@@ -211,7 +211,7 @@ export default function Today() {
         <div className="planet-theme-card" style={{
           margin: '0 auto',
           marginTop: 24,
-          maxWidth: 340,
+          maxWidth: 300,
           background: '#fff',
           color: '#1a237e',
           borderRadius: 18,
@@ -234,7 +234,7 @@ export default function Today() {
         <div style={{
           margin: '0 auto',
           marginTop: 18,
-          maxWidth: 340,
+          maxWidth: 300,
           background: '#f7faff',
           color: '#1a237e',
           borderRadius: 14,
