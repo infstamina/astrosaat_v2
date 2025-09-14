@@ -190,6 +190,7 @@ export default function Today() {
       </div>
       {/* Seçili gezegenin tema bilgileri kartı */}
       {activePlanetIdx !== -1 && (
+        <>
         <div className="planet-theme-card" style={{
           margin: '0 auto',
           marginTop: 24,
@@ -212,6 +213,36 @@ export default function Today() {
             </span>
           </div>
         </div>
+        {/* Öneri Kartı */}
+        <div style={{
+          margin: '0 auto',
+          marginTop: 18,
+          maxWidth: 340,
+          background: '#f7faff',
+          color: '#1a237e',
+          borderRadius: 14,
+          boxShadow: '0 1px 6px 0 rgba(0,0,0,0.07)',
+          padding: '16px 22px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          border: `1.5px dashed ${allPlanetHours[activePlanetIdx].color}`,
+        }}>
+          <div style={{fontWeight:'bold', fontSize:'1.08rem', marginBottom:6}}>
+            Öneri
+          </div>
+          <div style={{fontSize:'0.98rem', textAlign:'center'}}>
+            {/* Burada gezegene göre öneri metni dinamikleştirilebilir */}
+            {allPlanetHours[activePlanetIdx].planet === 'Mars' && 'Enerjini harekete dönüştür, yeni bir işe başlamak için cesur ol!'}
+            {allPlanetHours[activePlanetIdx].planet === 'Venüs' && 'Sevdiklerinle vakit geçir, güzellikleri fark et ve kendine değer ver.'}
+            {allPlanetHours[activePlanetIdx].planet === 'Güneş' && 'Kendini ifade et, liderlik et ve yaratıcılığını ortaya koy.'}
+            {allPlanetHours[activePlanetIdx].planet === 'Jüpiter' && 'Yeni şeyler öğren, fırsatları değerlendir ve iyimser ol.'}
+            {allPlanetHours[activePlanetIdx].planet === 'Satürn' && 'Sorumluluklarını yerine getir, sabırlı ol ve plan yap.'}
+            {allPlanetHours[activePlanetIdx].planet === 'Merkür' && 'İletişim kur, yaz, oku ve zihnini çalıştır.'}
+            {allPlanetHours[activePlanetIdx].planet === 'Ay' && 'Duygularına kulak ver, iç dünyana dön ve sevdiklerine yakın ol.'}
+          </div>
+        </div>
+        </>
       )}
     </div>
   );
