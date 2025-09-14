@@ -10,11 +10,15 @@ export default function NextPage() {
   const locationInfo = locationRouter.state?.locationInfo;
 
   // Tarih seçimi burada yönetilecek
-  const todayStr = new Date().toISOString().slice(0, 10);
+  const today = new Date();
+  const todayStr = today.toISOString().slice(0, 10);
   const [selectedDate, setSelectedDate] = useState(todayStr);
-  const dateObj = selectedDate ? new Date(selectedDate + 'T12:00:00') : new Date();
+  const dateObj = selectedDate ? new Date(selectedDate + 'T12:00:00') : today;
   const dateStr = dateObj.toLocaleDateString('tr-TR');
-  const timeStr = dateObj.toLocaleTimeString('tr-TR');
+  // Eğer seçili tarih bugünün tarihi ise gerçek saat göster, değilse 12:00:00 göster
+  const timeStr = (selectedDate === todayStr)
+    ? today.toLocaleTimeString('tr-TR')
+    : dateObj.toLocaleTimeString('tr-TR');
 
   // Konum bilgisi
   let lat = null, lng = null;

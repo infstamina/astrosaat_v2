@@ -9,8 +9,8 @@ export default function Today() {
   // Bugünün tarihi
   const today = new Date();
   const dateObj = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
-  const dateStr = dateObj.toLocaleDateString('tr-TR');
-  const timeStr = dateObj.toLocaleTimeString('tr-TR');
+  const dateStr = today.toLocaleDateString('tr-TR');
+  const timeStr = today.toLocaleTimeString('tr-TR');
 
   // Konum bilgisi
   let lat = null, lng = null;
