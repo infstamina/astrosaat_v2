@@ -37,33 +37,31 @@ function App() {
 
 
   return (
-    <div style={{
-      background: "url('/icon/AstroSaatIcon3.png')",
-      width: '80vw',
-      height: '120vh',
-    }}>
-      <h2><br />Gezegen Kaç?<br /><br /><br /><br /><br /><br /></h2>
-      <div className="card">
-              <p className="read-the-docs">Enlem-boylam hesaplaması yapmak üzere <br />güncel konumunuz alınacak ancak <br />kayıt edilmeyecektir.</p>
-        {location && (
-          <div style={{ marginTop: '1em' }}>
+    <>
+      <div style={{
+        background: "url('/icon/AstroSaatIcon5x.png')"
+      }}>
+        <img src="/icon/AstroSaatIcon4.png" width={400}/>
+          <p className="read-the-docs">Enlem-boylam hesaplaması yapmak üzere <br />güncel konumunuz alınacak ancak <br />kayıt edilmeyecektir.</p>
+          {location && (
+            <div style={{ marginTop: '1em' }}>
               <button onClick={() => navigate('/today', { state: { locationInfo: location } })} style={{ background:'#ffd700'}}>Bugün</button>
               <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{ background:'#eee'}}>Liste</button>
-            
-          </div>
-        )}
-        {!location && (
-          <div style={{ marginTop: '1em' }}>
-        <button onClick={getLocation}>
-          Konum Al
-        </button>
-        </div>
-        )}
-        {error && (
-          <div style={{ color: 'red', marginTop: '1em' }}>{error}</div>
-        )}
+            </div>
+          )}
+          {!location && (
+            <div style={{ marginTop: '1em' }}>
+              <button onClick={getLocation}>
+                Konum Al
+              </button>
+            </div>
+          )}
+          {error && (
+            <div style={{ color: 'red', marginTop: '1em' }}>{error}</div>
+          )}
+          <br />
       </div>
-    </div>
+    </>
   )
 }
 
