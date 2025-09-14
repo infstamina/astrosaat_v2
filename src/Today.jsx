@@ -127,9 +127,38 @@ export default function Today() {
     return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
 
+  // An'ı yakala butonuna tıklandığında scroll için
+  const handleCatchMoment = () => {
+    setSelectedPlanetIdx(currentPlanetIdx);
+    setTimeout(() => {
+      if (planetCardsRef.current[currentPlanetIdx]) {
+        planetCardsRef.current[currentPlanetIdx].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }, 50);
+  };
+
   return (
   <div style={{ padding: '24px 4vw', maxWidth: 1100, margin: '0 auto' }}>
       <h2 style={{textAlign:'center', fontSize:'2.1rem', marginBottom:8, letterSpacing:1}}>Bugünün Gezegen Saatleri</h2>
+      <div style={{textAlign:'center', marginBottom: 16}}>
+        <button
+          style={{
+            background: '#ffd600',
+            color: '#1a237e',
+            border: 'none',
+            borderRadius: 8,
+            padding: '10px 22px',
+            fontWeight: 'bold',
+            fontSize: '1.08rem',
+            cursor: 'pointer',
+            boxShadow: '0 1px 6px 0 rgba(0,0,0,0.08)',
+            transition: 'background 0.2s',
+          }}
+          onClick={handleCatchMoment}
+        >
+          An'ı yakala
+        </button>
+      </div>
       <div style={{textAlign:'center', color:'#888', marginBottom:18}}>
         <span style={{fontWeight:'bold'}}>Tarih:</span> {dateStr} &nbsp; <span style={{fontWeight:'bold'}}>Saat:</span> {timeStr}
       </div>
