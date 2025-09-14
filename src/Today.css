@@ -76,7 +76,7 @@
     overflow-x: auto;
   }
   .planet-card {
-    min-width: 90vw;
-    max-width: 98vw;
+    min-width: 70vw;
+    max-width: 80vw;
   }
 }
