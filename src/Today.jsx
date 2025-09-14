@@ -151,7 +151,9 @@ export default function Today() {
 
   return (
   <div style={{ padding: '24px 4vw', maxWidth: 1100, margin: '0 auto' }}>
-      <h2 style={{textAlign:'center', fontSize:'2.1rem', marginBottom:8, letterSpacing:1}}>Bugünün Gezegen Saatleri</h2>
+      <div style={{textAlign:'center', fontSize:'1.15rem', marginBottom:18, color:'#1a237e'}}>
+        Günün Orkestratörü: <span style={{fontWeight:'bold', color: planetData[firstPlanetIdx].color}}>{planetData[firstPlanetIdx].icon} {planetData[firstPlanetIdx].name}</span>
+      </div>
       <div style={{textAlign:'center', marginBottom: 16}}>
         <button
           style={{
