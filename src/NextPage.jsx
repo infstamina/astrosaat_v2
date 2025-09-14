@@ -113,19 +113,7 @@ export default function NextPage() {
 
   return (
     <div style={{ padding: 32 }}>
-  <div style={{ marginBottom: 16 }}>
-        <label htmlFor="date-input"><strong>Tarih seçin:</strong> </label>
-        <input
-          id="date-input"
-          type="date"
-          value={selectedDate}
-          onChange={e => setSelectedDate(e.target.value)}
-        />
-      </div>
-      <div style={{ marginBottom: 16 }}>
-        <strong>Tarih:</strong> {dateStr} <br />
-        <strong>Saat:</strong> {timeStr}
-      </div>
+      
       <div>
         <strong>Konum Bilgisi:</strong><br />
         {lat && lng ? (
@@ -137,21 +125,32 @@ export default function NextPage() {
           <span>Konum bilgisi bulunamadı.</span>
         )}
       </div>
+  <div style={{ marginBottom: 16, marginTop: 16 }}>
+        <label htmlFor="date-input"><strong>Tarih seçin:</strong> </label>
+        <input
+          id="date-input"
+          type="date"
+          value={selectedDate}
+          onChange={e => setSelectedDate(e.target.value)}
+        />
+      </div>
       <div style={{ marginTop: 24 }}>
         <strong>Gündüz Saat Aralığı:</strong> {formatTime(sunrise)} - {formatTime(sunset)}<br />
-        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(dayDuration)}</span><br />
+        <span style={{marginLeft:16,}}><em>Fark:</em> {formatDuration(dayDuration)}</span><br />
+        <span style={{marginLeft:16,}}><em>Süre:</em> {formatDuration(dayDuration / 12)}</span><br />
         <strong>Gece Saat Aralığı:</strong> {formatTime(sunset)} - {formatTime(nextSunrise)}<br />
-        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(nightDuration)}</span><br /><br />
+        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(nightDuration)}</span><br />
+        <span style={{marginLeft:16,}}><em>Süre:</em> {formatDuration(nightDuration / 12)}</span><br /><br />
         <strong>Gündüz Gezegen Saatleri:</strong>
         <ol>
           {dayPlanetHours.map((d, i) => (
-            <li key={i}> {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
+            <li key={i} align="left"> {formatTime(d.start)} - {formatTime(d.end)} <b>{d.planet}</b></li>
           ))}
         </ol>
         <strong>Gece Gezegen Saatleri:</strong>
         <ol>
           {nightPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
+            <li key={i} align="left"> {formatTime(d.start)} - {formatTime(d.end)} <b>{d.planet}</b></li>
           ))}
         </ol>
       </div>
