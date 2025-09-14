@@ -47,16 +47,36 @@ export default function NextPage({ locationInfo }) {
     return `${h} saat ${m} dk ${s} sn`;
   }
 
-  // Gezegen saatleri için gündüz ve gece sürelerini 12'ye böl ve saat aralıklarını hesapla
+  // Gezegen isimleri ve sırası (geleneksel haftalık sıra)
+  const planetNames = [
+    'Satürn', // 0
+    'Jüpiter', // 1
+    'Mars',    // 2
+    'Güneş',   // 3
+    'Venüs',   // 4
+    'Merkür',  // 5
+    'Ay'       // 6
+  ];
+
+  // Haftanın günü -> gündüz/gece ilk gezegeni (Pazar:0, Pazartesi:1, ...)
+  // Pazar: Güneş, Pazartesi: Ay, Salı: Mars, Çarşamba: Merkür, Perşembe: Jüpiter, Cuma: Venüs, Cumartesi: Satürn
+  const weekdayFirstPlanetIdx = [3, 6, 2, 5, 1, 4, 0];
+  const weekday = dateObj.getDay();
+  const firstPlanetIdx = weekdayFirstPlanetIdx[weekday];
+
+  // Gezegen saatleri için gündüz ve gece sürelerini 12'ye böl ve saat aralıklarını hesapla, gezegen isimlerini sırala
   let dayPlanetHours = [], nightPlanetHours = [];
   if (dayDuration && sunrise && sunset) {
     const part = dayDuration / 12;
     let start = new Date(sunrise);
     for (let i = 0; i < 12; i++) {
       let end = new Date(start.getTime() + part * 1000);
+      // Gündüz saatleri için gezegen sırası: ilk gezegen + i
+      const planetIdx = (firstPlanetIdx + i) % 7;
       dayPlanetHours.push({
         start: new Date(start),
-        end: new Date(end)
+        end: new Date(end),
+        planet: planetNames[planetIdx]
       });
       start = end;
     }
@@ -66,9 +86,12 @@ export default function NextPage({ locationInfo }) {
     let start = new Date(sunset);
     for (let i = 0; i < 12; i++) {
       let end = new Date(start.getTime() + part * 1000);
+      // Gece saatleri için gezegen sırası: ilk gezegen + 12 + i
+      const planetIdx = (firstPlanetIdx + 12 + i) % 7;
       nightPlanetHours.push({
         start: new Date(start),
-        end: new Date(end)
+        end: new Date(end),
+        planet: planetNames[planetIdx]
       });
       start = end;
     }
@@ -89,7 +112,6 @@ export default function NextPage({ locationInfo }) {
           type="date"
           value={selectedDate}
           onChange={e => setSelectedDate(e.target.value)}
-          max={todayStr}
         />
       </div>
       <div style={{ marginBottom: 16 }}>
@@ -115,13 +137,13 @@ export default function NextPage({ locationInfo }) {
         <strong>Gündüz Gezegen Saatleri:</strong>
         <ol>
           {dayPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</li>
+            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
           ))}
         </ol>
         <strong>Gece Gezegen Saatleri:</strong>
         <ol>
           {nightPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</li>
+            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
           ))}
         </ol>
       </div>
