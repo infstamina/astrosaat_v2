@@ -1,5 +1,6 @@
 import SunCalc from 'suncalc';
 import { useLocation } from 'react-router-dom';
+import './Today.css';
 
 export default function Today() {
   const locationRouter = useLocation();
@@ -47,15 +48,15 @@ export default function Today() {
     return `${h} saat ${m} dk ${s} sn`;
   }
 
-  // Gezegen isimleri ve sırası (geleneksel haftalık sıra)
-  const planetNames = [
-    'Satürn', // 0
-    'Jüpiter', // 1
-    'Mars',    // 2
-    'Güneş',   // 3
-    'Venüs',   // 4
-    'Merkür',  // 5
-    'Ay'       // 6
+  // Gezegen isimleri, ikonları ve renkleri
+  const planetData = [
+    { name: 'Satürn', icon: '🪐', color: '#bdbdbd' },
+    { name: 'Jüpiter', icon: '🟤', color: '#c49a6c' },
+    { name: 'Mars', icon: '🔴', color: '#e53935' },
+    { name: 'Güneş', icon: '☀️', color: '#ffd600' },
+    { name: 'Venüs', icon: '🟣', color: '#ba68c8' },
+    { name: 'Merkür', icon: '⚪', color: '#b0bec5' },
+    { name: 'Ay', icon: '🌙', color: '#90caf9' },
   ];
 
   // Haftanın günü -> gündüz/gece ilk gezegeni (Pazar:0, Pazartesi:1, ...)
@@ -76,7 +77,9 @@ export default function Today() {
       dayPlanetHours.push({
         start: new Date(start),
         end: new Date(end),
-        planet: planetNames[planetIdx]
+        planet: planetData[planetIdx].name,
+        icon: planetData[planetIdx].icon,
+        color: planetData[planetIdx].color
       });
       start = end;
     }
@@ -91,7 +94,9 @@ export default function Today() {
       nightPlanetHours.push({
         start: new Date(start),
         end: new Date(end),
-        planet: planetNames[planetIdx]
+        planet: planetData[planetIdx].name,
+        icon: planetData[planetIdx].icon,
+        color: planetData[planetIdx].color
       });
       start = end;
     }
@@ -102,40 +107,43 @@ export default function Today() {
   }
 
   return (
-    <div style={{ padding: 32 }}>
-      <h2>Bugün Gezegen Saatleri</h2>
-      <div style={{ marginBottom: 16 }}>
-        <strong>Tarih:</strong> {dateStr} <br />
-        <strong>Saat:</strong> {timeStr}
+    <div style={{ padding: '24px 4vw', maxWidth: 1100, margin: '0 auto' }}>
+      <h2 style={{textAlign:'center', fontSize:'2.1rem', marginBottom:8, letterSpacing:1}}>Bugünün Gezegen Saatleri</h2>
+      <div style={{textAlign:'center', color:'#888', marginBottom:18}}>
+        <span style={{fontWeight:'bold'}}>Tarih:</span> {dateStr} &nbsp; <span style={{fontWeight:'bold'}}>Saat:</span> {timeStr}
       </div>
-      <div>
-        <strong>Konum Bilgisi:</strong><br />
-        {lat && lng ? (
-          <>
-            Enlem: {lat} <br />
-            Boylam: {lng}
-          </>
-        ) : (
-          <span>Konum bilgisi bulunamadı.</span>
-        )}
+      <div style={{textAlign:'center', marginBottom:18}}>
+        <span style={{fontWeight:'bold'}}>Konum:</span> {lat && lng ? `Enlem: ${lat}  Boylam: ${lng}` : 'Konum bilgisi bulunamadı.'}
       </div>
-      <div style={{ marginTop: 24 }}>
-        <strong>Gündüz Saat Aralığı:</strong> {formatTime(sunrise)} - {formatTime(sunset)}<br />
-        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(dayDuration)}</span><br />
-        <strong>Gece Saat Aralığı:</strong> {formatTime(sunset)} - {formatTime(nextSunrise)}<br />
-        <span style={{marginLeft:16}}><em>Fark:</em> {formatDuration(nightDuration)}</span><br /><br />
-        <strong>Gündüz Gezegen Saatleri:</strong>
-        <ol>
+      {/* Gündüz Saatleri */}
+      <div style={{margin:'32px 0'}}>
+        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#1a237e'}}>Gündüz Saatleri</div>
+        <div style={{color:'#666', fontSize:'0.98rem', marginBottom: 8}}>Aralık: {formatTime(sunrise)} - {formatTime(sunset)}<br /><em>Fark:</em> {formatDuration(dayDuration)}</div>
+        <div className="planet-cards">
           {dayPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
+            <div className="planet-card planet-day" key={i} style={{'--card-bg': '#f7faff', '--card-fg': d.color}}>
+              <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
+              <div className="planet-label">{d.planet}</div>
+              <div className="planet-time">{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</div>
+              <div className="planet-duration">Süre: {formatDuration((d.end-d.start)/1000)}</div>
+            </div>
           ))}
-        </ol>
-        <strong>Gece Gezegen Saatleri:</strong>
-        <ol>
+        </div>
+      </div>
+      {/* Gece Saatleri */}
+      <div style={{margin:'32px 0'}}>
+        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#fffde7', textShadow:'0 1px 6px #23243a'}}>Gece Saatleri</div>
+        <div style={{color:'#bbb', fontSize:'0.98rem', marginBottom: 8}}>Aralık: {formatTime(sunset)} - {formatTime(nextSunrise)}<br /><em>Fark:</em> {formatDuration(nightDuration)}</div>
+        <div className="planet-cards">
           {nightPlanetHours.map((d, i) => (
-            <li key={i}>{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)} <b>({d.planet})</b></li>
+            <div className="planet-card planet-night" key={i} style={{'--card-bg': '#23243a', '--card-fg': d.color}}>
+              <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
+              <div className="planet-label">{d.planet}</div>
+              <div className="planet-time">{i+1}. saat: {formatTime(d.start)} - {formatTime(d.end)}</div>
+              <div className="planet-duration">Süre: {formatDuration((d.end-d.start)/1000)}</div>
+            </div>
           ))}
-        </ol>
+        </div>
       </div>
     </div>
   );
