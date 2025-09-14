@@ -39,9 +39,9 @@ function App() {
   return (
     <>
       <div style={{
-        background: "url('/icon/AstroSaatIcon5x.png')"
+        background: "url('./icon/AstroSaatIcon5x.png')"
       }}>
-        <img src="/icon/AstroSaatIcon4.png" width={380}/>
+        <img src="./icon/AstroSaatIcon4.png" width={380}/>
           <p className="read-the-docs">Enlem-boylam hesaplaması yapmak üzere <br />güncel konumunuz alınacak ancak <br />kayıt edilmeyecektir.</p>
           {location && (
             <div style={{ marginTop: '1em' }}>
