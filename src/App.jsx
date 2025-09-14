@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
-import NextPage from './NextPage'
+import { useNavigate } from 'react-router-dom';
+import NextPage from './NextPage';
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
@@ -7,11 +8,10 @@ import './App.css'
 
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0);
   const [location, setLocation] = useState(null);
   const [error, setError] = useState(null);
-  // Sadece otomatik konum kullanılacak
-  const [goNext, setGoNext] = useState(false);
+  const navigate = useNavigate();
 
   // Manuel ilçe seçimi kaldırıldı
 
@@ -34,19 +34,7 @@ function App() {
     );
   };
 
-  // Konum veya manuel seçim tamamlandığında otomatik geçiş
-  useEffect(() => {
-    if (location) {
-      const timer = setTimeout(() => setGoNext(true), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [location]);
 
-
-  if (goNext) {
-    // Sadece otomatik konum ile ilerle
-    return <NextPage locationInfo={location} />;
-  }
 
   return (
     <>
@@ -69,6 +57,10 @@ function App() {
             <strong>Konumunuz:</strong><br />
             Enlem: {location.latitude} <br />
             Boylam: {location.longitude}
+            <div style={{ marginTop: '1em', display: 'flex', gap: 12 }}>
+              <button onClick={() => navigate('/next', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#eee'}}>Liste</button>
+              <button onClick={() => navigate('/today', { state: { locationInfo: location } })} style={{padding:'8px 16px', borderRadius:8, border:'none', fontWeight:'bold', background:'#ffd700'}}>Bugün</button>
+            </div>
           </div>
         )}
         {error && (

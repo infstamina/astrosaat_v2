@@ -1,18 +1,13 @@
 import SunCalc from 'suncalc';
+import { useLocation } from 'react-router-dom';
 
-
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-
-export default function NextPage() {
-  const navigate = useNavigate();
+export default function Today() {
   const locationRouter = useLocation();
   const locationInfo = locationRouter.state?.locationInfo;
 
-  // Tarih seçimi burada yönetilecek
-  const todayStr = new Date().toISOString().slice(0, 10);
-  const [selectedDate, setSelectedDate] = useState(todayStr);
-  const dateObj = selectedDate ? new Date(selectedDate + 'T12:00:00') : new Date();
+  // Bugünün tarihi
+  const today = new Date();
+  const dateObj = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 12, 0, 0);
   const dateStr = dateObj.toLocaleDateString('tr-TR');
   const timeStr = dateObj.toLocaleTimeString('tr-TR');
 
@@ -101,7 +96,6 @@ export default function NextPage() {
       start = end;
     }
   }
-
   function formatTime(date) {
     if (!date) return '-';
     return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
@@ -109,16 +103,7 @@ export default function NextPage() {
 
   return (
     <div style={{ padding: 32 }}>
-  <h2>Sonraki Sayfa</h2>
-  <div style={{ marginBottom: 16 }}>
-        <label htmlFor="date-input"><strong>Tarih seçin:</strong> </label>
-        <input
-          id="date-input"
-          type="date"
-          value={selectedDate}
-          onChange={e => setSelectedDate(e.target.value)}
-        />
-      </div>
+      <h2>Bugün Gezegen Saatleri</h2>
       <div style={{ marginBottom: 16 }}>
         <strong>Tarih:</strong> {dateStr} <br />
         <strong>Saat:</strong> {timeStr}
