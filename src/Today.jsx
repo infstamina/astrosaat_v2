@@ -53,13 +53,13 @@ export default function Today() {
 
   // Gezegen isimleri, ikonları ve renkleri
   const planetData = [
-    { name: 'Satürn', icon: '🪐', color: '#bdbdbd' },
-    { name: 'Jüpiter', icon: '🟤', color: '#c49a6c' },
-    { name: 'Mars', icon: '🔴', color: '#e53935' },
-    { name: 'Güneş', icon: '☀️', color: '#ffd600' },
-    { name: 'Venüs', icon: '🟣', color: '#ba68c8' },
-    { name: 'Merkür', icon: '⚪', color: '#b0bec5' },
-    { name: 'Ay', icon: '🌙', color: '#90caf9' },
+    { name: 'Satürn', icon: '🪐', color: '#bdbdbd', info: 'Disiplin, sorumluluk, sınırlar, sabır, olgunluk, yapı, kısıtlama, dersler.' },
+    { name: 'Jüpiter', icon: '🟤', color: '#c49a6c', info: 'Bolluk, şans, büyüme, genişleme, bilgelik, inanç, iyimserlik, fırsatlar.' },
+    { name: 'Mars', icon: '🔴', color: '#e53935', info: 'Enerji, hareket, mücadele, cesaret, irade, öfke, motivasyon, girişim.' },
+    { name: 'Güneş', icon: '☀️', color: '#ffd600', info: 'Kimlik, yaşam enerjisi, ego, yaratıcılık, liderlik, öz güven, merkez.' },
+    { name: 'Venüs', icon: '🟣', color: '#ba68c8', info: 'Aşk, güzellik, uyum, sanat, değerler, ilişkiler, çekicilik, zevk.' },
+    { name: 'Merkür', icon: '⚪', color: '#b0bec5', info: 'Zihin, iletişim, mantık, öğrenme, hareket, ticaret, analiz.' },
+    { name: 'Ay', icon: '🌙', color: '#90caf9', info: 'Duygular, içgüdü, alışkanlıklar, annelik, güvenlik, bilinçaltı.' },
   ];
 
   // Haftanın günü -> gündüz/gece ilk gezegeni (Pazar:0, Pazartesi:1, ...)
@@ -165,23 +165,22 @@ export default function Today() {
           margin: '0 auto',
           marginTop: 24,
           maxWidth: 340,
-          background: allPlanetHours[activePlanetIdx].type === 'day' ? '#fffde7' : '#23243a',
-          color: allPlanetHours[activePlanetIdx].type === 'day' ? '#1a237e' : '#ffd600',
+          background: '#fff',
+          color: '#1a237e',
           borderRadius: 18,
           boxShadow: '0 2px 12px 0 rgba(0,0,0,0.10)',
           padding: '22px 28px',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          border: '2px solid #ff9800',
+          border: `2px solid ${allPlanetHours[activePlanetIdx].color}`,
         }}>
           <div style={{fontSize:'2.5rem', marginBottom:8}}>{allPlanetHours[activePlanetIdx].icon}</div>
           <div style={{fontWeight:'bold', fontSize:'1.25rem', marginBottom:4}}>{allPlanetHours[activePlanetIdx].planet}</div>
-          <div style={{fontSize:'1.05rem', marginBottom:6}}>
-            Tema: <span style={{fontWeight:'bold', color: allPlanetHours[activePlanetIdx].color}}>{allPlanetHours[activePlanetIdx].type === 'day' ? 'Gündüz Teması' : 'Gece Teması'}</span>
-          </div>
-          <div style={{fontSize:'0.98rem', color:'#888'}}>
-            Saat Aralığı: {formatTime(allPlanetHours[activePlanetIdx].start)} - {formatTime(allPlanetHours[activePlanetIdx].end)}
+          <div style={{fontSize:'1.05rem', marginBottom:6, textAlign:'center'}}>
+            <span style={{fontWeight:'bold', color: allPlanetHours[activePlanetIdx].color}}>
+              {planetData.find(p => p.name === allPlanetHours[activePlanetIdx].planet)?.info}
+            </span>
           </div>
         </div>
       )}
