@@ -51,6 +51,13 @@ export default function Today() {
     const s = Math.floor(seconds % 60);
     return `${h} saat ${m} dk ${s} sn`;
   }
+    function formatDurationHM(seconds) {
+    if (seconds == null) return '-';
+    const h = Math.floor(seconds / 3600);
+    const m = Math.floor((seconds % 3600) / 60);
+    const s = Math.floor(seconds % 60);
+    return `${h} saat ${m} dk`;
+  }
 
   // Gezegen isimleri, ikonları ve renkleri
   const planetData = [
@@ -127,6 +134,10 @@ export default function Today() {
     if (!date) return '-';
     return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
   }
+    function formatTimeHHMM(date) {
+    if (!date) return '-';
+    return date.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+  }
 
   // An'ı yakala butonuna tıklandığında scroll için
   const handleCatchMoment = () => {
@@ -160,18 +171,20 @@ export default function Today() {
           An'ı yakala
         </button>
       </div>
+      {/* Tarih, Saat, Konum 
       <div style={{textAlign:'center', color:'#888', marginBottom:18}}>
         <span style={{fontWeight:'bold'}}>Tarih:</span> {dateStr} &nbsp; <span style={{fontWeight:'bold'}}>Saat:</span> {timeStr}
       </div>
       <div style={{textAlign:'center', marginBottom:18}}>
         <span style={{fontWeight:'bold'}}>Konum:</span> {lat && lng ? `Enlem: ${lat}  Boylam: ${lng}` : 'Konum bilgisi bulunamadı.'}
-      </div>
+      </div>*/}
       {/* Gündüz + Gece Saatleri Scrollable */}
       <div style={{margin:'32px 0'}}>
         <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#1a237e'}}>Gündüz & Gece Gezegen Saatleri</div>
         <div style={{color:'#666', fontSize:'0.98rem', marginBottom: 8}}>
-          Gündüz: {formatTime(sunrise)} - {formatTime(sunset)} &nbsp; <em>Fark:</em> {formatDuration(dayDuration)} &nbsp; Gezegen Süresi: {formatDuration(dayDuration / 12)}<br />
-          Gece: {formatTime(sunset)} - {formatTime(nextSunrise)} &nbsp; <em>Fark:</em> {formatDuration(nightDuration)} &nbsp; Gezegen Süresi: {formatDuration(nightDuration / 12)}
+          {/* <em>Fark:</em> {formatDuration(dayDuration)} &nbsp; */}
+          Gündüz: {formatTimeHHMM(sunrise)} - {formatTimeHHMM(sunset)} &nbsp; Gezegen Süresi: {formatDurationHM(dayDuration / 12)}<br />
+          Gece: {formatTimeHHMM(sunset)} - {formatTimeHHMM(nextSunrise)} &nbsp; Gezegen Süresi: {formatDurationHM(nightDuration / 12)}
         </div>
         <div className="planet-cards">
           {allPlanetHours.map((d, i) => (
@@ -184,7 +197,7 @@ export default function Today() {
             >
               <div className="planet-icon" style={{color: d.color}}>{d.icon}</div>
               <div className="planet-label">{d.planet}</div>
-              <div className="planet-time">{i+1}. {formatTime(d.start)} - {formatTime(d.end)}</div>
+              <div className="planet-time">{i+1}. {formatTimeHHMM(d.start)} - {formatTimeHHMM(d.end)}</div>
             </div>
           ))}
         </div>
