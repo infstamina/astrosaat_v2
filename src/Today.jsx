@@ -154,6 +154,22 @@ export default function Today() {
       <div style={{textAlign:'center', fontSize:'1.15rem', marginBottom:18, color:'#1a237e'}}>
         Günün Orkestratörü: <span style={{fontWeight:'bold', color: planetData[firstPlanetIdx].color}}>{planetData[firstPlanetIdx].icon} {planetData[firstPlanetIdx].name}</span>
       </div>
+      {/* Tarih, Saat, Konum 
+      <div style={{textAlign:'center', color:'#888', marginBottom:18}}>
+        <span style={{fontWeight:'bold'}}>Tarih:</span> {dateStr} &nbsp; <span style={{fontWeight:'bold'}}>Saat:</span> {timeStr}
+      </div>
+      <div style={{textAlign:'center', marginBottom:18}}>
+        <span style={{fontWeight:'bold'}}>Konum:</span> {lat && lng ? `Enlem: ${lat}  Boylam: ${lng}` : 'Konum bilgisi bulunamadı.'}
+      </div>*/}
+      {/* Gündüz + Gece Saatleri Scrollable */}
+      <div style={{margin:'0px 0'}}>
+        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#1a237e'}}>Gündüz & Gece Gezegen Saatleri</div>
+        <div style={{color:'#666', fontSize:'0.98rem', marginBottom: 8}}>
+          {/* <em>Fark:</em> {formatDuration(dayDuration)} &nbsp; */}
+          Gündüz: {formatTimeHHMM(sunrise)} - {formatTimeHHMM(sunset)} &nbsp; Gezegen Süresi: {formatDurationHM(dayDuration / 12)}<br />
+          &nbsp; &nbsp; &nbsp; &nbsp;Gece: {formatTimeHHMM(sunset)} - {formatTimeHHMM(nextSunrise)} &nbsp; Gezegen Süresi: {formatDurationHM(nightDuration / 12)}
+        </div>
+        
       <div style={{textAlign:'center', marginBottom: 16}}>
         <button
           style={{
@@ -173,21 +189,6 @@ export default function Today() {
           An'ı yakala
         </button>
       </div>
-      {/* Tarih, Saat, Konum 
-      <div style={{textAlign:'center', color:'#888', marginBottom:18}}>
-        <span style={{fontWeight:'bold'}}>Tarih:</span> {dateStr} &nbsp; <span style={{fontWeight:'bold'}}>Saat:</span> {timeStr}
-      </div>
-      <div style={{textAlign:'center', marginBottom:18}}>
-        <span style={{fontWeight:'bold'}}>Konum:</span> {lat && lng ? `Enlem: ${lat}  Boylam: ${lng}` : 'Konum bilgisi bulunamadı.'}
-      </div>*/}
-      {/* Gündüz + Gece Saatleri Scrollable */}
-      <div style={{margin:'32px 0'}}>
-        <div style={{fontWeight:'bold', fontSize:'1.15rem', marginBottom: 8, color:'#1a237e'}}>Gündüz & Gece Gezegen Saatleri</div>
-        <div style={{color:'#666', fontSize:'0.98rem', marginBottom: 8}}>
-          {/* <em>Fark:</em> {formatDuration(dayDuration)} &nbsp; */}
-          Gündüz: {formatTimeHHMM(sunrise)} - {formatTimeHHMM(sunset)} &nbsp; Gezegen Süresi: {formatDurationHM(dayDuration / 12)}<br />
-          Gece: {formatTimeHHMM(sunset)} - {formatTimeHHMM(nextSunrise)} &nbsp; Gezegen Süresi: {formatDurationHM(nightDuration / 12)}
-        </div>
         <div className="planet-cards">
           {allPlanetHours.map((d, i) => (
             <div
