@@ -1,9 +1,15 @@
 import SunCalc from 'suncalc';
 
+
+import { useState } from 'react';
+
 export default function NextPage({ locationInfo }) {
-  const now = new Date();
-  const dateStr = now.toLocaleDateString();
-  const timeStr = now.toLocaleTimeString();
+  // Tarih seçimi burada yönetilecek
+  const todayStr = new Date().toISOString().slice(0, 10);
+  const [selectedDate, setSelectedDate] = useState(todayStr);
+  const dateObj = selectedDate ? new Date(selectedDate + 'T12:00:00') : new Date();
+  const dateStr = dateObj.toLocaleDateString('tr-TR');
+  const timeStr = dateObj.toLocaleTimeString('tr-TR');
 
   // Konum bilgisi
   let lat = null, lng = null;
@@ -15,12 +21,12 @@ export default function NextPage({ locationInfo }) {
   let sunrise = null, sunset = null, nextSunrise = null, nextSunset = null;
   let dayDuration = null, nightDuration = null;
   if (lat && lng) {
-    const todayTimes = SunCalc.getTimes(now, lat, lng);
+    const todayTimes = SunCalc.getTimes(dateObj, lat, lng);
     sunrise = todayTimes.sunrise;
     sunset = todayTimes.sunset;
     // Ertesi gün için
-    const tomorrow = new Date(now);
-    tomorrow.setDate(now.getDate() + 1);
+    const tomorrow = new Date(dateObj);
+    tomorrow.setDate(dateObj.getDate() + 1);
     const tomorrowTimes = SunCalc.getTimes(tomorrow, lat, lng);
     nextSunrise = tomorrowTimes.sunrise;
     nextSunset = tomorrowTimes.sunset;
@@ -76,6 +82,16 @@ export default function NextPage({ locationInfo }) {
   return (
     <div style={{ padding: 32 }}>
       <h2>Sonraki Sayfa</h2>
+      <div style={{ marginBottom: 16 }}>
+        <label htmlFor="date-input"><strong>Tarih seçin:</strong> </label>
+        <input
+          id="date-input"
+          type="date"
+          value={selectedDate}
+          onChange={e => setSelectedDate(e.target.value)}
+          max={todayStr}
+        />
+      </div>
       <div style={{ marginBottom: 16 }}>
         <strong>Tarih:</strong> {dateStr} <br />
         <strong>Saat:</strong> {timeStr}

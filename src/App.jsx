@@ -42,6 +42,7 @@ function App() {
     }
   }, [location]);
 
+
   if (goNext) {
     // Sadece otomatik konum ile ilerle
     return <NextPage locationInfo={location} />;
@@ -59,6 +60,7 @@ function App() {
       </div>
       <h1>Hoşgeldiniz!</h1>
       <div className="card">
+        {/* Tarih seçimi kaldırıldı, NextPage'de olacak */}
         <button onClick={getLocation}>
           Konumumu Al
         </button>
